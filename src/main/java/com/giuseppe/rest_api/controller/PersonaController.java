@@ -31,9 +31,12 @@ public class PersonaController {
     }
 
     @PostMapping
-    public ResponseEntity<URI> createPersona(@RequestBody Persona nuovaPersona) {
-        service.aggiungiPersona(nuovaPersona);
-        return ResponseEntity.created(URI.create("/persone/" + nuovaPersona.getId())).build();
+    public ResponseEntity<String> createPersona(@RequestBody Persona nuovaPersona) {
+        boolean retValue = service.aggiungiPersona(nuovaPersona);
+        if (retValue) {
+            return ResponseEntity.created(URI.create("/persone/" + nuovaPersona.getId())).build();
+        }
+        return ResponseEntity.unprocessableEntity().body("Persona con id " + nuovaPersona.getId() + " già presente");
     }
 
     @PutMapping("/{id}")

@@ -11,8 +11,14 @@ public class PersonaService {
 
     private List<Persona> listaPersone = new ArrayList<>();
 
-    public void aggiungiPersona(Persona p) {
+    public boolean aggiungiPersona(Persona p) {
+        for (Persona per : listaPersone)  {
+            if (per.getId() == p.getId()) {
+                return false;
+            }
+        }
         listaPersone.add(p);
+        return true;
     }
 
     public boolean rimuoviPersona(int id) {
