@@ -4,12 +4,23 @@ import com.giuseppe.rest_api.model.Persona;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonaService {
 
-    private List<Persona> listaPersone = new ArrayList<>();
+    private List<Persona> listaPersone = List.of(
+            new Persona(12, "Mario", "Rossi"),
+            new Persona(1, "Anna", "Verdi"),
+            new Persona(2, "Vasco", "Rossi"),
+            new Persona(45, "Manuel", "Gialli"),
+            new Persona(213, "Francesca", "Neri"),
+            new Persona(123, "Aldo", "Rossi"),
+            new Persona(555, "Giorgio", "Anice"),
+            new Persona(76, "Michela", "Zanzara")
+    );
 
     public boolean aggiungiPersona(Persona p) {
         for (Persona per : listaPersone)  {
@@ -50,8 +61,23 @@ public class PersonaService {
         return false;
     }
 
-    public List<Persona> getAllPersone() {
-        return listaPersone;
+    public List<Persona> getAllPersone(String orderBy) {
+        Comparator<Persona> comparator;
+
+        switch (orderBy) {
+            case "nome":
+                comparator = Comparator.comparing(Persona::getNome);
+                break;
+            case "cognome":
+                comparator = Comparator.comparing(Persona::getCognome);
+                break;
+            case "id":
+            default:
+                comparator = Comparator.comparing(Persona::getId);
+                break;
+        }
+
+        return listaPersone.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     public Persona getPersonaById(int id) {
