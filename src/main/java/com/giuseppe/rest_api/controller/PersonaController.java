@@ -17,8 +17,11 @@ public class PersonaController {
     private PersonaService service;
 
     @GetMapping
-    public List<Persona> getAllPersone(@RequestParam(required = false, defaultValue = "id") String orderBy) {
-        return service.getAllPersone(orderBy);
+    public List<Persona> getAllPersone(
+            @RequestParam(required = false, defaultValue = "id") String orderBy,
+            @RequestParam(required = false) Integer limit
+    ) {
+        return service.getAllPersone(orderBy, limit);
     }
 
     @GetMapping("/{id}")

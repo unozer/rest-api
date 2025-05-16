@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class PersonaService {
@@ -61,7 +62,7 @@ public class PersonaService {
         return false;
     }
 
-    public List<Persona> getAllPersone(String orderBy) {
+    public List<Persona> getAllPersone(String orderBy, Integer limit) {
         Comparator<Persona> comparator;
 
         switch (orderBy) {
@@ -77,7 +78,12 @@ public class PersonaService {
                 break;
         }
 
-        return listaPersone.stream().sorted(comparator).collect(Collectors.toList());
+        Stream<Persona> stream = listaPersone.stream().sorted(comparator);
+
+        if (limit != null)
+            stream = stream.limit(limit);
+
+        return stream.collect(Collectors.toList());
     }
 
     public Persona getPersonaById(int id) {
