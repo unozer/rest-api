@@ -4,6 +4,7 @@ import com.giuseppe.rest_api.model.Persona;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class PersonaService {
     );
 
     public boolean aggiungiPersona(Persona p) {
-        for (Persona per : listaPersone)  {
+        for (Persona per : listaPersone) {
             if (per.getId() == p.getId()) {
                 return false;
             }
@@ -63,9 +64,11 @@ public class PersonaService {
     }
 
     public List<Persona> getAllPersone(String orderBy, Integer limit) {
-        Comparator<Persona> comparator;
+        String[] split = orderBy.toLowerCase().split(":");
+        boolean descending = split.length > 1 && split[1].equals("desc");
 
-        switch (orderBy) {
+        Comparator<Persona> comparator;
+        switch (split[0]) {
             case "nome":
                 comparator = Comparator.comparing(Persona::getNome);
                 break;
@@ -78,10 +81,11 @@ public class PersonaService {
                 break;
         }
 
+        if (descending) comparator = comparator.reversed();
+
         Stream<Persona> stream = listaPersone.stream().sorted(comparator);
 
-        if (limit != null)
-            stream = stream.limit(limit);
+        if (limit != null) stream = stream.limit(limit);
 
         return stream.collect(Collectors.toList());
     }
